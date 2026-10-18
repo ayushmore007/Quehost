@@ -16,6 +16,10 @@ export const supabaseConfigured = !!(process.env.SUPABASE_URL && process.env.SUP
  * MUST NEVER BE IMPORTED INTO CLIENT COMPONENTS.
  */
 export const supabaseServer = createClient(supabaseUrl, supabaseServiceKey, {
+  // Next.js caches fetch() by default, which freezes counters; never cache DB calls.
+  global: {
+    fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, { ...init, cache: "no-store" }),
+  },
   auth: {
     persistSession: false,
     autoRefreshToken: false,

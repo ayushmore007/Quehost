@@ -68,7 +68,7 @@ export default function AdminDashboardPage() {
   // Fetch Live Stats
   const fetchStats = useCallback(async () => {
     try {
-      const res = await fetch("/api/admin/stats", { cache: "no-store" });
+      const res = await fetch(`/api/admin/stats?t=${Date.now()}`, { cache: "no-store" });
       if (res.status === 401) {
         window.location.href = "/admin/login";
         return;
@@ -106,9 +106,14 @@ export default function AdminDashboardPage() {
 
     const interval = setInterval(() => {
       fetchStats();
-    }, 10000);
+    }, 5000);
+    const onFocus = () => fetchStats();
+    window.addEventListener("focus", onFocus);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+    };
   }, [fetchStats, fetchClusters]);
 
   // Toggle Submissions Open/Close
