@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabase";
+import { supabaseServer, supabaseConfigured } from "@/lib/supabase";
 import { sanitizeQuestionText, isValidUUID } from "@/lib/utils";
 import { checkIpRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getSubmissionOpenState } from "@/lib/settings";
@@ -17,6 +17,14 @@ export async function POST(request: NextRequest) {
           error: "Submission rate limit exceeded for this network. Please try again later.",
         },
         { status: 429 }
+      );
+    }
+
+    if (!supabaseConfigured) {
+      console.error("SUPABASE_URL / SUPABASE_SERVICE_KEY are not set on the server.");
+      return NextResponse.json(
+        { error: "Server is not configured (database keys missing). Please tell the organisers." },
+        { status: 500 }
       );
     }
 
@@ -66,7 +74,11 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    if (!rpcError && rpcData) {
+    if (rpcError) console.error("submit_question_atomic RPC error:", rpcError.message);
+
+    // A missing 'open' settings row makes the RPC report CLOSED; trust the app-level state instead.
+    const rpcSaysClosed = !rpcError && rpcData && !rpcData.success && rpcData.error === "SUBMISSIONS_CLOSED";
+    if (!rpcError && rpcData && !(rpcSaysClosed && (await getSubmissionOpenState()))) {
       if (!rpcData.success) {
         if (rpcData.error === "SUBMISSIONS_CLOSED") {
           return NextResponse.json(

@@ -1,6 +1,6 @@
 /**
  * In-memory sliding window rate limiter for secondary IP capping.
- * Caps submissions to 5 per IP per hour as requested in specification.
+ * Loose per-IP cap (default 5000/hour); the real limit is 5 per device.
  */
 
 interface RateLimitRecord {
@@ -10,7 +10,8 @@ interface RateLimitRecord {
 const ipRecords = new Map<string, RateLimitRecord>();
 
 const WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const MAX_REQUESTS_PER_WINDOW = 5;
+// Many attendees share one venue Wi-Fi/NAT IP, so keep this high (abuse guard only).
+const MAX_REQUESTS_PER_WINDOW = parseInt(process.env.IP_RATE_LIMIT_PER_HOUR || "5000", 10);
 
 /**
  * Checks if the given IP address is allowed to submit a question.

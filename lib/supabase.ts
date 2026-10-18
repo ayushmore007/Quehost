@@ -9,6 +9,8 @@ if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
   }
 }
 
+export const supabaseConfigured = !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY);
+
 /**
  * Server-side Supabase client using the Service Role Key.
  * MUST NEVER BE IMPORTED INTO CLIENT COMPONENTS.
