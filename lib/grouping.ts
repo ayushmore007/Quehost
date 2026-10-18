@@ -58,9 +58,9 @@ function fallbackNormalizedGrouping(questions: QuestionRecord[]): { title: strin
       const groupTokens = new Set(key.split(" ").filter((t) => t.length > 2));
       if (tokens.size > 0 && groupTokens.size > 0) {
         let intersection = 0;
-        for (const t of tokens) {
+        tokens.forEach((t) => {
           if (groupTokens.has(t)) intersection++;
-        }
+        });
         const jaccard = intersection / (tokens.size + groupTokens.size - intersection);
         if (jaccard >= 0.7) {
           matchedKey = key;
