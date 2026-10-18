@@ -9,10 +9,10 @@ export async function POST(request: NextRequest) {
     const password = body?.password;
 
     const expectedPassword = process.env.ADMIN_PASSWORD;
-    const sessionSecret = process.env.SESSION_SECRET || "quehost_session_secret_9f83a7c2b4e105d862f91a3c75e4b2d0";
+    const sessionSecret = process.env.SESSION_SECRET;
 
-    if (!expectedPassword) {
-      console.error("ADMIN_PASSWORD is not configured in environment variables.");
+    if (!expectedPassword || !sessionSecret) {
+      console.error("ADMIN_PASSWORD or SESSION_SECRET is not configured in environment variables.");
       return NextResponse.json(
         { error: "Server authentication is not configured properly." },
         { status: 500 }

@@ -44,7 +44,8 @@ function base64UrlDecode(str: string): Uint8Array {
 
 async function getCryptoKey(secret: string): Promise<CryptoKey> {
   const enc = new TextEncoder();
-  const cleanSecret = (secret || process.env.SESSION_SECRET || "quehost_session_secret_9f83a7c2b4e105d862f91a3c75e4b2d0").trim();
+  const cleanSecret = (secret || process.env.SESSION_SECRET || "").trim();
+  if (!cleanSecret) throw new Error("SESSION_SECRET is not configured.");
   return crypto.subtle.importKey(
     "raw",
     enc.encode(cleanSecret),
