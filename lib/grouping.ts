@@ -158,12 +158,14 @@ export async function runGroupingPipeline(): Promise<GroupingResponse> {
   questions.forEach((q) => questionMap.set(q.id, q));
 
   let isFallback = false;
+  let fallbackReason = "";
   let rawClusters: { title: string; ids: string[] }[] = [];
   const apiKey = process.env.GEMINI_API_KEY?.trim();
 
   if (!apiKey) {
     console.warn("GEMINI_API_KEY is not set. Falling back to normalized text grouping.");
     isFallback = true;
+    fallbackReason = "GEMINI_API_KEY is not set";
     rawClusters = fallbackNormalizedGrouping(questions);
   } else {
     try {
@@ -305,6 +307,7 @@ Every index from 0 to ${chunkResults.length - 1} must appear exactly once.`;
     } catch (geminiErr) {
       console.error("Gemini grouping failed after retries. Falling back to normalized grouping.", geminiErr);
       isFallback = true;
+      fallbackReason = String((geminiErr as any)?.message || geminiErr).slice(0, 300);
       rawClusters = fallbackNormalizedGrouping(questions);
     }
   }
@@ -376,7 +379,7 @@ Every index from 0 to ${chunkResults.length - 1} must appear exactly once.`;
     isFallback,
     totalQuestions: questions.length,
     message: isFallback
-      ? "Gemini API unavailable; displaying fallback normalized text grouping. Submissions were not lost."
+      ? `Gemini API unavailable (${fallbackReason}); displaying fallback normalized text grouping. Submissions were not lost.`
       : undefined,
   };
 }
