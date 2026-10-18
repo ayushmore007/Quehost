@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 15, 23, 42;
+  --navy-primary: #0f172a;
+  --navy-deep: #172554;
+  --navy-accent: #1e3a8a;
+  --navy-muted: #334155;
+  --bg-main: #f8fafc;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.04) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(15, 23, 42, 0.03) 0px, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Animations */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(30, 58, 138, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(30, 58, 138, 0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUpFade 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Static, Clean White Cards with Crisp Borders & Shadows */
+.clean-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.clean-card-hover:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 4px 10px -4px rgba(15, 23, 42, 0.03);
+  transform: translateY(-2px);
+}
+
+/* Navy Blue interactive button */
+.btn-navy {
+  background-color: #0f172a;
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.btn-navy:hover {
+  background-color: #1e293b;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+  transform: translateY(-1px);
+}
+
+.btn-navy:active {
+  background-color: #020617;
+  transform: translateY(0);
+}
+
+/* Custom navy scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
