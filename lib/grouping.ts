@@ -24,7 +24,7 @@ export interface GroupingResponse {
 }
 
 const CHUNK_SIZE = 300;
-const GEMINI_MODEL = "gemini-2.0-flash";
+const GEMINI_MODEL = process.env.GEMINI_MODEL?.trim() || "gemini-2.5-flash";
 
 /**
  * Normalizes text for fallback clustering (lowercase, alphanumeric only).
